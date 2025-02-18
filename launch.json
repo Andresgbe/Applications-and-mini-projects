@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C++: g++ compilar y depurar archivo activo",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileDirname}/main",  // Ruta del ejecutable generado
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "C/C++: g++ compilar archivo activo"
+           
+        }
+    ]
+}
