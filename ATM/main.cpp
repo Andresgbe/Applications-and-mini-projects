@@ -1,8 +1,10 @@
 #include <iostream>
-#include <cstdlib> // Para usar system()
+#include <cstdlib>
 #include <limits>
 #include <ctime>
 #include <cstdlib>
+#include "atm_functions.h"
+#include <string>
 
 using namespace std;
 
@@ -16,105 +18,133 @@ bool validateOption(const string &op)
     return op.length() == 1 && isdigit(op[0]) && op[0] >= '1' && op[0] <= '6';
 }
 
+void invalidOption(){
+    string button;
+    system("clear");
+    cout << "************************************" << endl;
+    cout << "**         Invalid option         **" << endl;
+    cout << "**                                **" << endl;
+    cout << "**  Press any button to continue  **" << endl;
+    cout << "************************************" << endl;
+    cout << " " << endl;
+    cin >> button;
+    system("clear");
+}
+
 float selectBalance()
 {
-    int option;
+    string option;
     float manualBalance;
     srand(static_cast<unsigned int>(time(0)));
-
-    cout << "You need to select the balance" << endl;
     cout << " " << endl;
-    cout << "Choose any option" << endl;
-    cout << "1. Generar de forma aleatoria" << endl;
-    cout << "2. Escoger manualmente" << endl;
+    cout << "************************************" << endl;
+    cout << "**   Select the account balance   **" << endl;
+    cout << "**                                **" << endl;
+    cout << "** 1.  Randomly generate          **" << endl;
+    cout << "** 2.  Manually select            **" << endl;
+    cout << "************************************" << endl;
+    cout << " " << endl;
     cin >> option;
 
-    if (option == 2)
+    if (option == "1")
     {
-        cout << "Enter your balance" << endl;
-        cin >> manualBalance;
-        return manualBalance;
+        int balance = rand() % 1000000 + 1;
+        system("clear");
+        return balance;
+    } else if (option == "2")
+    {
+       system("clear");
+       cout << "****************************" << endl;
+       cout << "**   Enter your balance   **" << endl;
+       cout << "**                        **" << endl;
+       cout << "****************************" << endl;
+       cout << " " << endl;
+       cin >> manualBalance;
+       system("clear");
+       return manualBalance;
     }
 
-    if (option == 1)
-    {
-        int saldo = rand() % 1000000 + 1;
-        cout << "Tu saldo disponible es " << saldo << endl;
-        return saldo;
-    }
+    invalidOption();
+    return selectBalance();
 }
 
-void checkBalance(float balance){
-    string button;
-    cout << "Your actual balance" << endl;
-    cout << balance << endl;
-
-    cout << "Press any button to get back" << endl;
-    cin >> button;
-}
-
-void menu(){
+int identification(){
+    string id;
+    
     system("clear");
-    cout << "            ATM             " << endl;
-    cout << "****************************" << endl;
-    cout << "**    Choose an option    **" << endl;
-    cout << "**                        **" << endl;
-    cout << "**  1. Check balance      **" << endl;
-    cout << "**  2. Deposit            **" << endl;
-    cout << "**  3. Withdrawal         **" << endl;
-    cout << "**  4. Transfers          **" << endl;
-    cout << "**  5. Log out            **" << endl;
-    cout << "****************************" << endl;
+    cout << "                    ATM                   " << endl;
+    cout << "******************************************" << endl;
+    cout << "**           Welcome to ATM             **" << endl;
+    cout << "**                                      **" << endl;
+    cout << "** Enter the last two digits of your ID **" << endl;
+    cout << "**                                      **" << endl;
+    cout << "******************************************" << endl;
+    cout << " " << endl;
+    cin >> id;
+
+    if(validateID(id)){
+        int num = stoi(id);
+        return num;
+    }
+
+    invalidOption();
+    return identification();
 }
 
-void Displaymenu()
-{
+int menu(){
     string option;
 
-    while (!validateOption(option))
-    {
-        menu();
-        cin >> option;
+    system("clear");
+    cout << "                 ATM                " << endl;
+    cout << "*************************************" << endl;
+    cout << "**        Choose an option        **" << endl;
+    cout << "**                                **" << endl;
+    cout << "**  1.  Check balance             **" << endl;
+    cout << "**  2.  Deposit                   **" << endl;
+    cout << "**  3.  Withdrawal                **" << endl;
+    cout << "**  4.  Transfers                 **" << endl;
+    cout << "**  5.  Log out                   **" << endl;
+    cout << "************************************" << endl;
+    cout << " " << endl;
+    cin >> option;
 
-        if(!validateOption(option)){
-            system("clear");
-            cout << "Invalid option, please try again" << endl;
-        }
+    if(validateOption(option)){
+        int num = stoi(option);
+        return num;
     }
+
+    invalidOption();
+    return menu();
 }
+
+
 
     int main()
     {
-        string id;
 
         float actualBalance = selectBalance();
-        cout << "EL BALANCE ESSS!!" << actualBalance << endl;
-
-        cout << "                       ATM                " << endl;
-        cout << "******************************************" << endl;
-        cout << "**            Welcome to ATM            **" << endl;
-        cout << "**                                      **" << endl;
-        cout << "** Enter the last two digits of your ID **" << endl;
-        cout << "**                                      **" << endl;
-        cout << "******************************************" << endl;
+        cout << "Available Balance: " << actualBalance << endl;
         cout << " " << endl;
 
-        while (!validateID(id))
-        {
-            cin >> id;
-            if (!validateID(id))
+        identification();
+        int op = menu();
+            switch (op)
             {
-                system("clear");
-                cout << "                       ATM                " << endl;
-                cout << "*************************************************" << endl;
-                cout << "** Invalid ID, please enter exactly two digits **" << endl;
-                cout << "**                                             **" << endl;
-                cout << "**                                             **" << endl;
-                cout << "*************************************************" << endl;
+            case 1:
+                checkBalance(actualBalance);
+                menu();
+                break;
+            case 2:
+                deposit();
+                menu();
+                break;
+            case 3:
+                withdrawal();
+                menu();
+                break;
+
+            default:
+                break;
             }
-        }
-
-        Displaymenu();
-
         return 0;
     }
